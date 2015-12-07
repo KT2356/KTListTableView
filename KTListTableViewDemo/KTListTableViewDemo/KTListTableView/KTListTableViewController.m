@@ -69,9 +69,9 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (section != 0) {
-        UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(20, 20, 100, 20)];
-        backView.backgroundColor = [UIColor clearColor];
-        UILabel *indexLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, 100, 20)];
+        UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+        backView.backgroundColor = [UIColor groupTableViewBackgroundColor];
+        UILabel *indexLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width, 20)];
         indexLabel.backgroundColor = [UIColor clearColor];
         indexLabel.font = [UIFont boldSystemFontOfSize:14];
         indexLabel.text = self.sortIndex[section - 1];
