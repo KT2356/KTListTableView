@@ -25,9 +25,14 @@
         self.automaticallyAdjustsScrollViewInsets = NO;
        self.dataDict = [[KTWordIndex sharedModel] analysisDataList:dataList];
         self.sortIndex = [self.dataDict.allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+            if ([obj1 isEqualToString:@"#"]) {
+                return 1;
+            }
+            if ([obj2 isEqualToString:@"#"]) {
+                return -1;
+            }
             return [obj1 compare:obj2 options:NSNumericSearch];
         }];
-
     }
     return self;
 }
@@ -82,9 +87,12 @@
     }
 }
 - (KTListDataModel *)bindData:(NSIndexPath *)indexPath {
-    KTListDataModel *model;
+    KTListDataModel *model = [[KTListDataModel alloc] init];
     if (indexPath.section == 0) {
-        model = [self.dataDict valueForKey:self.sortIndex[0]][0];
+        NSArray *name  = @[@"订阅号",@"公众号"];
+        NSArray *image = @[[UIImage imageNamed:@"a"],[UIImage imageNamed:@"b"]];
+        model.userName = name[indexPath.row];
+        model.userIcon = image[indexPath.row];
     } else {
         NSArray *data = [self.dataDict valueForKey:self.sortIndex[indexPath.section - 1]];
         model = data[indexPath.row];
@@ -123,6 +131,10 @@
     
 }
 
+- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    
+    [self.searchVC resignFirstResponder];
+}
 
 #pragma mark - setter/getter
 - (NSDictionary *)dataDict {
