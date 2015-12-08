@@ -16,7 +16,6 @@
 
 @interface KTListTableViewController : UITableViewController
 @property (nonatomic, weak) id <KTListTableDelegate> delegate;
-@property (weak, nonatomic) IBOutlet UISearchBar *searchVC;
 
 
 - (instancetype)initWithData:(NSArray *)dataList;

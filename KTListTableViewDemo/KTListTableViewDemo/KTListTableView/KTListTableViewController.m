@@ -9,11 +9,14 @@
 #import "KTListTableViewController.h"
 #import "KTListTableCell.h"
 #import "KTWordIndex.h"
+#import "KTSearchUpdateVC.h"
 
-
-@interface KTListTableViewController ()<UISearchBarDelegate>
+@interface KTListTableViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate>
 @property (nonatomic, strong) NSDictionary *dataDict;
 @property (nonatomic, strong) NSArray *sortIndex;
+@property (nonatomic, strong) UISearchController *searchController;
+@property (nonatomic, strong) NSArray *dataArray;
+@property (nonatomic, strong) KTSearchUpdateVC *searResultVC;
 @end
 
 @implementation KTListTableViewController
@@ -21,6 +24,7 @@
 - (instancetype)initWithData:(NSArray *)dataList {
     self = [super init];
     if (self) {
+        self.dataArray = dataList;
         self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateInitialViewController];
         self.automaticallyAdjustsScrollViewInsets = NO;
        self.dataDict = [[KTWordIndex sharedModel] analysisDataList:dataList];
@@ -40,15 +44,9 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [self setupSearchBar];
-}
-
-- (void)setupSearchBar {
-    self.searchVC.placeholder = @"搜索";
-    self.searchVC.delegate    = self;
+    self.tableView.tableHeaderView = self.searchController.searchBar;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
 }
-
 
 #pragma mark - Table view data source
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -124,16 +122,26 @@
 }
 
 #pragma mark - UISearchBarDelegate
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
+
+- (void)willPresentSearchController:(UISearchController *)searchController {
+    NSLog(@"p");
 }
 
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    
-}
+- (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
 
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
+    NSLog(@"%@", self.dataArray);
+    NSString *searchString = [self.searchController.searchBar text];
+    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"userName CONTAINS %@", searchString];
+    NSArray *dataList2 = @[];
     
-    [self.searchVC resignFirstResponder];
+    //过滤数据
+    dataList2 = [self.dataArray filteredArrayUsingPredicate:preicate];
+    if (dataList2.count > 0) {
+             NSLog(@"%@",[dataList2[0] valueForKey:@"userName"]);
+    }
+   
+    self.searResultVC.searchResult = dataList2;
+    [self.searResultVC.tableView reloadData];
 }
 
 #pragma mark - setter/getter
@@ -149,5 +157,29 @@
         _sortIndex = [[NSArray alloc] init];
     }
     return _sortIndex;
+}
+
+- (NSArray *)dataArray {
+    if (!_dataArray) {
+        _dataArray = [[NSArray alloc] init];
+    }
+    return _dataArray;
+}
+
+- (UISearchController *)searchController {
+    if (!_searchController) {
+        _searchController = [[UISearchController alloc] initWithSearchResultsController:self.searResultVC];
+        _searchController.searchResultsUpdater = self;
+        _searchController.hidesNavigationBarDuringPresentation = NO;
+        _searchController.delegate = self;
+        _searchController.searchBar.delegate = self;
+    }
+    return _searchController;
+}
+- (KTSearchUpdateVC *)searResultVC {
+    if (!_searResultVC) {
+        _searResultVC = [[KTSearchUpdateVC alloc] init];
+    }
+    return _searResultVC;
 }
 @end

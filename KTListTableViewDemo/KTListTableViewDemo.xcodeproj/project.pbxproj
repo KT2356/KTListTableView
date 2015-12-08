@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		68849C051C166CCB00186989 /* KTSearchUpdateVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 68849C041C166CCB00186989 /* KTSearchUpdateVC.m */; };
 		68A4A2991C11715C0046290A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A2981C11715C0046290A /* main.m */; };
 		68A4A29C1C11715C0046290A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A29B1C11715C0046290A /* AppDelegate.m */; };
 		68A4A29F1C11715C0046290A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 68A4A29E1C11715C0046290A /* ViewController.m */; };
@@ -21,6 +22,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		68849C031C166CCB00186989 /* KTSearchUpdateVC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = KTSearchUpdateVC.h; sourceTree = "<group>"; };
+		68849C041C166CCB00186989 /* KTSearchUpdateVC.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = KTSearchUpdateVC.m; sourceTree = "<group>"; };
 		68A4A2941C11715C0046290A /* KTListTableViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KTListTableViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		68A4A2981C11715C0046290A /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		68A4A29A1C11715C0046290A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -100,6 +103,8 @@
 			children = (
 				68A4A2BA1C117DD60046290A /* KTListTableViewController.h */,
 				68A4A2BB1C117DD60046290A /* KTListTableViewController.m */,
+				68849C031C166CCB00186989 /* KTSearchUpdateVC.h */,
+				68849C041C166CCB00186989 /* KTSearchUpdateVC.m */,
 				68C8B0281C156431006FDD78 /* KTListTableCell.h */,
 				68C8B0291C156431006FDD78 /* KTListTableCell.m */,
 				68C8B0251C1560BA006FDD78 /* KTListDataModel.h */,
@@ -189,6 +194,7 @@
 				68A4A29C1C11715C0046290A /* AppDelegate.m in Sources */,
 				68C8B0271C1560BA006FDD78 /* KTListDataModel.m in Sources */,
 				68A4A2991C11715C0046290A /* main.m in Sources */,
+				68849C051C166CCB00186989 /* KTSearchUpdateVC.m in Sources */,
 				68C8B02A1C156431006FDD78 /* KTListTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
