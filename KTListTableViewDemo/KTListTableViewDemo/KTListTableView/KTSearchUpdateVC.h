@@ -7,8 +7,12 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "KTListDataModel.h"
+@protocol KTSearchResultDelegate <NSObject>
+- (void)KTSearchResultDidSelected:(KTListDataModel *)model ;
+@end
 
 @interface KTSearchUpdateVC : UITableViewController
-
+@property (nonatomic, weak) id <KTSearchResultDelegate> delegate;
 @property (nonatomic, strong) NSArray *searchResult;
 @end

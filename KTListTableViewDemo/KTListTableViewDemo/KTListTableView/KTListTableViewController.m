@@ -11,7 +11,7 @@
 #import "KTWordIndex.h"
 #import "KTSearchUpdateVC.h"
 
-@interface KTListTableViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate>
+@interface KTListTableViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate,KTSearchResultDelegate>
 @property (nonatomic, strong) NSDictionary *dataDict;
 @property (nonatomic, strong) NSArray *sortIndex;
 @property (nonatomic, strong) UISearchController *searchController;
@@ -22,22 +22,19 @@
 @implementation KTListTableViewController
 
 - (instancetype)initWithData:(NSArray *)dataList {
-    self = [super init];
-    if (self) {
-        self.dataArray = dataList;
-        self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateInitialViewController];
-        self.automaticallyAdjustsScrollViewInsets = NO;
-       self.dataDict = [[KTWordIndex sharedModel] analysisDataList:dataList];
-        self.sortIndex = [self.dataDict.allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-            if ([obj1 isEqualToString:@"#"]) {
-                return 1;
-            }
-            if ([obj2 isEqualToString:@"#"]) {
-                return -1;
-            }
-            return [obj1 compare:obj2 options:NSNumericSearch];
-        }];
-    }
+    self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateInitialViewController];
+    self.dataArray = dataList;
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.dataDict = [[KTWordIndex sharedModel] analysisDataList:dataList];
+    self.sortIndex = [self.dataDict.allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
+        if ([obj1 isEqualToString:@"#"]) {
+            return 1;
+        }
+        if ([obj2 isEqualToString:@"#"]) {
+            return -1;
+        }
+        return [obj1 compare:obj2 options:NSNumericSearch];
+    }];
     return self;
 }
 
@@ -46,6 +43,9 @@
     [super viewDidLoad];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
+    [self setAutomaticallyAdjustsScrollViewInsets:YES];
+    self.navigationController.navigationBar.translucent = YES;
+
 }
 
 #pragma mark - Table view data source
@@ -112,6 +112,10 @@
     [self.delegate KTListTableDidSelectedData:model];
 }
 
+- (void)KTSearchResultDidSelected:(KTListDataModel *)model {
+    [self.delegate KTListTableDidSelectedData:model];
+}
+
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return self.sortIndex;
 }
@@ -123,24 +127,13 @@
 
 #pragma mark - UISearchBarDelegate
 
-- (void)willPresentSearchController:(UISearchController *)searchController {
-    NSLog(@"p");
-}
 
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
-
-    NSLog(@"%@", self.dataArray);
     NSString *searchString = [self.searchController.searchBar text];
     NSPredicate *preicate = [NSPredicate predicateWithFormat:@"userName CONTAINS %@", searchString];
-    NSArray *dataList2 = @[];
-    
-    //过滤数据
-    dataList2 = [self.dataArray filteredArrayUsingPredicate:preicate];
-    if (dataList2.count > 0) {
-             NSLog(@"%@",[dataList2[0] valueForKey:@"userName"]);
-    }
-   
-    self.searResultVC.searchResult = dataList2;
+    NSArray *result = [self.dataArray filteredArrayUsingPredicate:preicate];
+    self.searResultVC.searchResult = result.count > 0 ? result : nil  ;
+    self.searResultVC.tableView.tableFooterView.hidden = result.count > 0 ? YES : NO;
     [self.searResultVC.tableView reloadData];
 }
 
@@ -170,7 +163,7 @@
     if (!_searchController) {
         _searchController = [[UISearchController alloc] initWithSearchResultsController:self.searResultVC];
         _searchController.searchResultsUpdater = self;
-        _searchController.hidesNavigationBarDuringPresentation = NO;
+        _searchController.hidesNavigationBarDuringPresentation = YES;
         _searchController.delegate = self;
         _searchController.searchBar.delegate = self;
     }
@@ -179,6 +172,7 @@
 - (KTSearchUpdateVC *)searResultVC {
     if (!_searResultVC) {
         _searResultVC = [[KTSearchUpdateVC alloc] init];
+        _searResultVC.delegate = self;
     }
     return _searResultVC;
 }

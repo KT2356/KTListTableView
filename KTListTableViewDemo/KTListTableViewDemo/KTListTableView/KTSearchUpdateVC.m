@@ -8,7 +8,6 @@
 
 #import "KTSearchUpdateVC.h"
 #import "KTListTableCell.h"
-#import "KTListDataModel.h"
 
 @interface KTSearchUpdateVC ()
 
@@ -17,16 +16,14 @@
 @implementation KTSearchUpdateVC
 
 - (instancetype)init {
-    self = [super init];
-    if (self) {
-        self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateViewControllerWithIdentifier:@"KTSearchUpdateVC"];
-    }
+    self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateViewControllerWithIdentifier:@"KTSearchUpdateVC"];
     return self;
 }
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.tableView.showsVerticalScrollIndicator = NO;
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,13 +38,12 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 1;
+    return self.searchResult.count;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50;
 }
-
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     KTListTableCell *cell  = [self.tableView dequeueReusableCellWithIdentifier:@"KTListTableCell"forIndexPath:indexPath];
@@ -57,6 +53,12 @@
         cell.image.image       = model.userIcon;
     }
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    KTListDataModel *model = self.searchResult[indexPath.row];
+    [self.delegate KTSearchResultDidSelected:model];
 }
 
 - (NSArray *)searchResult {
