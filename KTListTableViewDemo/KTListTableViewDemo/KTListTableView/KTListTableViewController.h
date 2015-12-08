@@ -17,6 +17,5 @@
 @interface KTListTableViewController : UITableViewController
 @property (nonatomic, weak) id <KTListTableDelegate> delegate;
 
-
 - (instancetype)initWithData:(NSArray *)dataList;
 @end

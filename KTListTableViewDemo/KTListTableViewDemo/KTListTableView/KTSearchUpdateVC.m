@@ -9,12 +9,8 @@
 #import "KTSearchUpdateVC.h"
 #import "KTListTableCell.h"
 
-@interface KTSearchUpdateVC ()
-
-@end
-
 @implementation KTSearchUpdateVC
-
+#pragma mark - life cycle
 - (instancetype)init {
     self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateViewControllerWithIdentifier:@"KTSearchUpdateVC"];
     return self;
@@ -25,12 +21,6 @@
     self.automaticallyAdjustsScrollViewInsets = NO;
     self.tableView.showsVerticalScrollIndicator = NO;
 }
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -61,6 +51,7 @@
     [self.delegate KTSearchResultDidSelected:model];
 }
 
+#pragma mark - setter/getter
 - (NSArray *)searchResult {
     if (!_searchResult) {
         _searchResult = [[NSArray alloc] init];

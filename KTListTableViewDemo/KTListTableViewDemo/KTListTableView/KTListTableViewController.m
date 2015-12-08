@@ -20,11 +20,10 @@
 @end
 
 @implementation KTListTableViewController
-
+#pragma mark - life cycle
 - (instancetype)initWithData:(NSArray *)dataList {
     self = [[UIStoryboard storyboardWithName:@"KTListTableView" bundle:nil] instantiateInitialViewController];
     self.dataArray = dataList;
-    self.automaticallyAdjustsScrollViewInsets = NO;
     self.dataDict = [[KTWordIndex sharedModel] analysisDataList:dataList];
     self.sortIndex = [self.dataDict.allKeys sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         if ([obj1 isEqualToString:@"#"]) {
@@ -38,17 +37,30 @@
     return self;
 }
 
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.tableView.tableHeaderView = self.searchController.searchBar;
     self.tableView.sectionIndexBackgroundColor = [UIColor clearColor];
     [self setAutomaticallyAdjustsScrollViewInsets:YES];
     self.navigationController.navigationBar.translucent = YES;
-
 }
 
-#pragma mark - Table view data source
+#pragma mark - private methods
+- (KTListDataModel *)bindData:(NSIndexPath *)indexPath {
+    KTListDataModel *model = [[KTListDataModel alloc] init];
+    if (indexPath.section == 0) {
+        NSArray *name  = @[@"订阅号",@"公众号"];
+        NSArray *image = @[[UIImage imageNamed:@"a"],[UIImage imageNamed:@"b"]];
+        model.userName = name[indexPath.row];
+        model.userIcon = image[indexPath.row];
+    } else {
+        NSArray *data = [self.dataDict valueForKey:self.sortIndex[indexPath.section - 1]];
+        model = data[indexPath.row];
+    }
+    return model;
+}
+
+#pragma mark - UITableViewDelegate
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
     return self.sortIndex.count + 1;
 }
@@ -84,19 +96,6 @@
         return nil;
     }
 }
-- (KTListDataModel *)bindData:(NSIndexPath *)indexPath {
-    KTListDataModel *model = [[KTListDataModel alloc] init];
-    if (indexPath.section == 0) {
-        NSArray *name  = @[@"订阅号",@"公众号"];
-        NSArray *image = @[[UIImage imageNamed:@"a"],[UIImage imageNamed:@"b"]];
-        model.userName = name[indexPath.row];
-        model.userIcon = image[indexPath.row];
-    } else {
-        NSArray *data = [self.dataDict valueForKey:self.sortIndex[indexPath.section - 1]];
-        model = data[indexPath.row];
-    }
-    return model;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     KTListTableCell *cell  = [self.tableView dequeueReusableCellWithIdentifier:@"KTListTableCell"];
@@ -112,10 +111,12 @@
     [self.delegate KTListTableDidSelectedData:model];
 }
 
+#pragma mark - KTSearchResultDelegate
 - (void)KTSearchResultDidSelected:(KTListDataModel *)model {
     [self.delegate KTListTableDidSelectedData:model];
 }
 
+#pragma mark - TableIndex
 - (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
     return self.sortIndex;
 }
@@ -125,14 +126,12 @@
     return index;
 }
 
-#pragma mark - UISearchBarDelegate
-
-
+#pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *searchString = [self.searchController.searchBar text];
     NSPredicate *preicate = [NSPredicate predicateWithFormat:@"userName CONTAINS %@", searchString];
     NSArray *result = [self.dataArray filteredArrayUsingPredicate:preicate];
-    self.searResultVC.searchResult = result.count > 0 ? result : nil  ;
+    self.searResultVC.searchResult = result.count > 0 ? result : nil;
     self.searResultVC.tableView.tableFooterView.hidden = result.count > 0 ? YES : NO;
     [self.searResultVC.tableView reloadData];
 }

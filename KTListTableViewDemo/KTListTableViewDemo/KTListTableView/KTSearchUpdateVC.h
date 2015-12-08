@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "KTListDataModel.h"
 @protocol KTSearchResultDelegate <NSObject>
-- (void)KTSearchResultDidSelected:(KTListDataModel *)model ;
+- (void)KTSearchResultDidSelected:(KTListDataModel *)model;
 @end
 
 @interface KTSearchUpdateVC : UITableViewController

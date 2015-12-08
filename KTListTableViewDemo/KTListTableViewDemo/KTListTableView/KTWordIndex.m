@@ -44,7 +44,12 @@
 }
 
 
+/**
+ *  @author KT, 2015-12-08 17:32:40
+ *
+ *  数组转字典
 
+ */
 - (NSDictionary *)analysisDataList:(NSArray *)dataList {
     for (KTListDataModel *model in dataList) {
         NSString *index = [self getFirstLetter:model.userName];
@@ -56,7 +61,6 @@
             [self.dataDict setObject:dataArray forKey:index];
         }
     }
-    
     return self.dataDict;
 }
 
