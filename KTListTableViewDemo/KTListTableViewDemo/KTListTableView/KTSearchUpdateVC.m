@@ -8,7 +8,7 @@
 
 #import "KTSearchUpdateVC.h"
 #import "KTListTableCell.h"
-
+#import "KTListDataModel.h"
 @implementation KTSearchUpdateVC
 #pragma mark - life cycle
 - (instancetype)init {

@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KTListDataModel.h"
+@class KTListDataModel;
+
 @protocol KTSearchResultDelegate <NSObject>
 - (void)KTSearchResultDidSelected:(KTListDataModel *)model;
 @end

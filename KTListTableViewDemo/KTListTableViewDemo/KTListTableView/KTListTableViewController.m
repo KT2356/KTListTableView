@@ -10,6 +10,7 @@
 #import "KTListTableCell.h"
 #import "KTWordIndex.h"
 #import "KTSearchUpdateVC.h"
+#import "KTListDataModel.h"
 
 @interface KTListTableViewController ()<UISearchControllerDelegate,UISearchResultsUpdating,UISearchBarDelegate,KTSearchResultDelegate>
 @property (nonatomic, strong) NSDictionary *dataDict;

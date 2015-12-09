@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "KTListDataModel.h"
+@class KTListDataModel;
 
 @protocol KTListTableDelegate <NSObject>
 @optional
