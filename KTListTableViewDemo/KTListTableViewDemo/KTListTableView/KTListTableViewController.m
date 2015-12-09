@@ -84,11 +84,11 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
     if (section != 0) {
-        UIView *backView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+        UIView *backView         = [[UIView alloc] initWithFrame:CGRectMake(0, 0, [UIScreen mainScreen].bounds.size.width, 20)];
         backView.backgroundColor = [UIColor groupTableViewBackgroundColor];
-        UILabel *indexLabel = [[UILabel alloc] initWithFrame:CGRectMake(20, 0, [UIScreen mainScreen].bounds.size.width, 20)];
+        UILabel *indexLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 0, [UIScreen mainScreen].bounds.size.width, 20)];
         indexLabel.backgroundColor = [UIColor clearColor];
-        indexLabel.font = [UIFont boldSystemFontOfSize:14];
+        indexLabel.font = [UIFont systemFontOfSize:14];
         indexLabel.text = self.sortIndex[section - 1];
         [backView addSubview:indexLabel];
         return  backView;
@@ -108,12 +108,16 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
      KTListDataModel *model = [self bindData:indexPath];
-    [self.delegate KTListTableDidSelectedData:model];
+    if ([self.delegate respondsToSelector:@selector(KTListTableDidSelectedData:)]) {
+        [self.delegate KTListTableDidSelectedData:model];
+    }
 }
 
 #pragma mark - KTSearchResultDelegate
 - (void)KTSearchResultDidSelected:(KTListDataModel *)model {
-    [self.delegate KTListTableDidSelectedData:model];
+    if ([self.delegate respondsToSelector:@selector(KTListTableDidSelectedData:)]) {
+        [self.delegate KTListTableDidSelectedData:model];
+    }
 }
 
 #pragma mark - TableIndex
@@ -129,8 +133,8 @@
 #pragma mark - UISearchResultsUpdating
 - (void)updateSearchResultsForSearchController:(UISearchController *)searchController {
     NSString *searchString = [self.searchController.searchBar text];
-    NSPredicate *preicate = [NSPredicate predicateWithFormat:@"userName CONTAINS %@", searchString];
-    NSArray *result = [self.dataArray filteredArrayUsingPredicate:preicate];
+    NSPredicate *preicate  = [NSPredicate predicateWithFormat:@"userName CONTAINS %@", searchString];
+    NSArray *result        = [self.dataArray filteredArrayUsingPredicate:preicate];
     self.searResultVC.searchResult = result.count > 0 ? result : nil;
     self.searResultVC.tableView.tableFooterView.hidden = result.count > 0 ? YES : NO;
     [self.searResultVC.tableView reloadData];
@@ -161,16 +165,16 @@
 - (UISearchController *)searchController {
     if (!_searchController) {
         _searchController = [[UISearchController alloc] initWithSearchResultsController:self.searResultVC];
-        _searchController.searchResultsUpdater = self;
+        _searchController.searchResultsUpdater                 = self;
         _searchController.hidesNavigationBarDuringPresentation = YES;
-        _searchController.delegate = self;
-        _searchController.searchBar.delegate = self;
+        _searchController.delegate                             = self;
+        _searchController.searchBar.delegate                   = self;
     }
     return _searchController;
 }
 - (KTSearchUpdateVC *)searResultVC {
     if (!_searResultVC) {
-        _searResultVC = [[KTSearchUpdateVC alloc] init];
+        _searResultVC          = [[KTSearchUpdateVC alloc] init];
         _searResultVC.delegate = self;
     }
     return _searResultVC;

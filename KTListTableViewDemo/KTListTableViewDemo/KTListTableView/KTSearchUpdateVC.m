@@ -48,7 +48,9 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     KTListDataModel *model = self.searchResult[indexPath.row];
-    [self.delegate KTSearchResultDidSelected:model];
+    if ([self.delegate respondsToSelector:@selector(KTSearchResultDidSelected:)]) {
+        [self.delegate KTSearchResultDidSelected:model];
+    }
 }
 
 #pragma mark - setter/getter
